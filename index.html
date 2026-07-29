@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Prompts · Planifica tu Semana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E4;
+    --paper:#FFFDF8;
+    --charcoal:#2B2820;
+    --sage:#69795A;
+    --sage-dark:#4B5A3E;
+    --mustard:#D9A441;
+    --line:#DAD2BC;
+    --red-stamp:#B5482C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--charcoal);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:48px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--sage-dark);
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(32px,5vw,52px);
+    margin:0 0 12px;
+    line-height:1.05;
+  }
+  header p{
+    font-size:16px;
+    color:#5A5646;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .board{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:32px;
+    align-items:start;
+  }
+  @media (max-width:860px){
+    .board{grid-template-columns:1fr;}
+  }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:32px;
+  }
+  fieldset{
+    border:none;
+    padding:0;
+    margin:0 0 26px;
+  }
+  legend{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--sage-dark);
+    margin-bottom:10px;
+    padding:0;
+  }
+  select, textarea, input[type="number"]{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--cream);
+    color:var(--charcoal);
+  }
+  textarea{resize:vertical;min-height:64px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip{
+    position:relative;
+  }
+  .chip input{
+    position:absolute;
+    opacity:0;
+    width:100%;
+    height:100%;
+    cursor:pointer;
+    margin:0;
+  }
+  .chip label{
+    display:inline-block;
+    font-size:14px;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--cream);
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .chip input:checked + label{
+    background:var(--sage);
+    border-color:var(--sage);
+    color:#fff;
+  }
+  .field-note{
+    font-size:12.5px;
+    color:#8A836C;
+    margin-top:6px;
+  }
+  button.generate{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:16px;
+    background:var(--charcoal);
+    color:var(--paper);
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    margin-top:6px;
+    transition:background .15s ease;
+  }
+  button.generate:hover{background:var(--sage-dark);}
+
+  /* Ticket */
+  .ticket-outer{
+    position:sticky;
+    top:24px;
+  }
+  .ticket{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:0;
+    font-family:'IBM Plex Mono',monospace;
+    box-shadow:0 18px 40px -20px rgba(43,40,32,0.35);
+  }
+  .ticket-head{
+    padding:20px 24px 16px;
+    border-bottom:2px dashed var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .ticket-head .t-title{
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    font-weight:600;
+  }
+  .ticket-head .t-id{
+    font-size:11px;
+    color:#8A836C;
+    text-align:right;
+  }
+  .stamp{
+    display:inline-block;
+    margin-top:8px;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--red-stamp);
+    border:1.5px solid var(--red-stamp);
+    padding:2px 8px;
+    border-radius:3px;
+    transform:rotate(-3deg);
+  }
+  .ticket-body{
+    padding:20px 24px;
+    font-size:13px;
+    line-height:1.7;
+    white-space:pre-wrap;
+    color:var(--charcoal);
+    min-height:220px;
+  }
+  .ticket-body.empty{
+    color:#A9A28C;
+    font-style:italic;
+  }
+  .ticket-foot{
+    padding:16px 24px 22px;
+    border-top:2px dashed var(--line);
+    display:flex;
+    gap:10px;
+  }
+  .ticket-foot button{
+    flex:1;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    padding:12px;
+    border-radius:3px;
+    border:1px solid var(--charcoal);
+    background:transparent;
+    color:var(--charcoal);
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .ticket-foot button:hover{background:var(--charcoal);color:var(--paper);}
+  .ticket-foot button.copied{background:var(--sage);border-color:var(--sage);color:#fff;}
+
+  .upsell{
+    margin-top:18px;
+    text-align:center;
+    font-size:13px;
+    color:#5A5646;
+  }
+  .upsell strong{color:var(--sage-dark);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Comanda de Cocina · Prompt Generator</div>
+    <h1>Arma el prompt perfecto<br>para planificar tu semana</h1>
+    <p>Responde unas preguntas y te preparamos un prompt listo para pegar en tu IA favorita (ChatGPT, Claude, Gemini).</p>
+  </header>
+
+  <div class="board">
+
+    <!-- FORM -->
+    <div class="card">
+      <form id="form">
+
+        <fieldset>
+          <legend>01 · Objetivos (elige uno o varios)</legend>
+          <div class="chips" id="objetivos">
+            <div class="chip"><input type="checkbox" id="o0" value="comer variado y mejor organizado" checked><label for="o0">Comer variado y organizado</label></div>
+            <div class="chip"><input type="checkbox" id="o1" value="bajar de peso de forma saludable"><label for="o1">Bajar de peso</label></div>
+            <div class="chip"><input type="checkbox" id="o2" value="ganar masa muscular"><label for="o2">Ganar masa muscular</label></div>
+            <div class="chip"><input type="checkbox" id="o3" value="ahorrar dinero en el super"><label for="o3">Ahorrar dinero</label></div>
+            <div class="chip"><input type="checkbox" id="o4" value="ahorrar tiempo cocinando (meal prep)"><label for="o4">Ahorrar tiempo</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>02 · Restricciones alimentarias</legend>
+          <div class="chips" id="restricciones">
+            <div class="chip"><input type="checkbox" id="r0" value="ninguna" checked><label for="r0">Ninguna</label></div>
+            <div class="chip"><input type="checkbox" id="r1" value="vegetariano"><label for="r1">Vegetariano</label></div>
+            <div class="chip"><input type="checkbox" id="r2" value="vegano"><label for="r2">Vegano</label></div>
+            <div class="chip"><input type="checkbox" id="r3" value="sin gluten"><label for="r3">Sin gluten</label></div>
+            <div class="chip"><input type="checkbox" id="r4" value="sin lactosa"><label for="r4">Sin lactosa</label></div>
+            <div class="chip"><input type="checkbox" id="r5" value="bajo en carbohidratos"><label for="r5">Bajo en carbos</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="row2">
+            <div>
+              <legend>03 · Días a planificar</legend>
+              <select id="dias">
+                <option value="3">3 días</option>
+                <option value="5">5 días</option>
+                <option value="7" selected>7 días</option>
+              </select>
+            </div>
+            <div>
+              <legend>04 · Personas</legend>
+              <input type="number" id="personas" min="1" value="1">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>05 · Comidas a incluir</legend>
+          <div class="chips" id="comidas">
+            <div class="chip"><input type="checkbox" id="c0" value="desayuno" checked><label for="c0">Desayuno</label></div>
+            <div class="chip"><input type="checkbox" id="c1" value="almuerzo" checked><label for="c1">Almuerzo</label></div>
+            <div class="chip"><input type="checkbox" id="c2" value="cena" checked><label for="c2">Cena</label></div>
+            <div class="chip"><input type="checkbox" id="c4" value="merienda" checked><label for="c4">Merienda</label></div>
+            <div class="chip"><input type="checkbox" id="c3" value="snacks/colaciones"><label for="c3">Snacks</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="row2">
+            <div>
+              <legend>06 · Presupuesto</legend>
+              <select id="presupuesto">
+                <option value="ajustado">Ajustado</option>
+                <option value="medio" selected>Medio</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+            <div>
+              <legend>07 · Tiempo para cocinar</legend>
+              <select id="tiempo">
+                <option value="poco (recetas rápidas, máx 20 min)">Poco (máx. 20 min)</option>
+                <option value="moderado (hasta 40 min)" selected>Moderado (hasta 40 min)</option>
+                <option value="amplio, disfruto cocinar">Amplio</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>08 · Ingredientes que ya tienes (opcional)</legend>
+          <textarea id="ingredientes" placeholder="Ej: arroz, pollo, brócoli, huevos..."></textarea>
+        </fieldset>
+
+        <fieldset>
+          <legend>09 · Alergias o algo a evitar (opcional)</legend>
+          <textarea id="alergias" placeholder="Ej: maní, mariscos, picante..."></textarea>
+        </fieldset>
+
+        <button type="submit" class="generate">Generar mi prompt →</button>
+      </form>
+    </div>
+
+    <!-- TICKET -->
+    <div class="ticket-outer">
+      <div class="ticket">
+        <div class="ticket-head">
+          <div>
+            <div class="t-title">Tu Comanda</div>
+            <span class="stamp">Listo para pegar</span>
+          </div>
+          <div class="t-id" id="ticketId">N.º ----</div>
+        </div>
+        <div class="ticket-body empty" id="output">Completa el formulario y presiona "Generar mi prompt" para ver tu comanda aquí.</div>
+        <div class="ticket-foot">
+          <button id="copyBtn" type="button">Copiar prompt</button>
+        </div>
+      </div>
+      <div class="upsell">¿Quieres que la IA ya venga <strong>configurada y afinada</strong> para esto, sin armar nada? Conoce el Agente de Meal Prep.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('form');
+const output = document.getElementById('output');
+const copyBtn = document.getElementById('copyBtn');
+const ticketId = document.getElementById('ticketId');
+
+function getChecked(containerId){
+  return Array.from(document.querySelectorAll('#'+containerId+' input:checked')).map(el => el.value);
+}
+
+// "Ninguna" es excluyente con el resto de las restricciones
+const ningunaBox = document.getElementById('r0');
+const otrasRestricciones = Array.from(document.querySelectorAll('#restricciones input')).filter(el => el.id !== 'r0');
+
+ningunaBox.addEventListener('change', function(){
+  if(ningunaBox.checked){
+    otrasRestricciones.forEach(el => el.checked = false);
+  }
+});
+
+otrasRestricciones.forEach(function(el){
+  el.addEventListener('change', function(){
+    if(el.checked){ ningunaBox.checked = false; }
+  });
+});
+
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  let objetivos = getChecked('objetivos');
+  if(objetivos.length === 0){ objetivos = ['comer variado y mejor organizado']; }
+  let restricciones = getChecked('restricciones');
+  if(restricciones.includes('ninguna') || restricciones.length === 0){
+    restricciones = ['ninguna restricción particular'];
+  }
+  const dias = document.getElementById('dias').value;
+  const personas = document.getElementById('personas').value || '1';
+  let comidas = getChecked('comidas');
+  if(comidas.length === 0){ comidas = ['almuerzo']; }
+  const presupuesto = document.getElementById('presupuesto').value;
+  const tiempo = document.getElementById('tiempo').value;
+  const ingredientes = document.getElementById('ingredientes').value.trim();
+  const alergias = document.getElementById('alergias').value.trim();
+
+  let prompt = `Actúa como un nutricionista y experto en meal prep. Ayúdame a planificar mi alimentación de la próxima semana con estas condiciones:\n\n`;
+  prompt += `- Objetivos: ${objetivos.join(', ')}\n`;
+  prompt += `- Restricciones alimentarias: ${restricciones.join(', ')}\n`;
+  prompt += `- Días a planificar: ${dias}\n`;
+  prompt += `- Cantidad de personas: ${personas}\n`;
+  prompt += `- Comidas a incluir cada día: ${comidas.join(', ')}\n`;
+  prompt += `- Presupuesto: ${presupuesto}\n`;
+  prompt += `- Tiempo disponible para cocinar: ${tiempo}\n`;
+  if(ingredientes){ prompt += `- Ingredientes que ya tengo y quiero aprovechar: ${ingredientes}\n`; }
+  if(alergias){ prompt += `- Alergias o ingredientes a evitar totalmente: ${alergias}\n`; }
+  const esVeggie = restricciones.includes('vegano') || restricciones.includes('vegetariano');
+  if(presupuesto === 'ajustado' && !esVeggie){
+    prompt += `- Regla de presupuesto: usa como máximo un solo tipo de carne roja/blanca en toda la semana (elige vaca, cerdo o pollo, no combines varias), y aprovecha el pescado como proteína económica siempre que sea posible.\n`;
+  } else if(presupuesto === 'ajustado' && esVeggie){
+    prompt += `- Regla de presupuesto: prioriza proteínas vegetales económicas (legumbres como lentejas, garbanzos y porotos, y huevo si no es vegano) en vez de sustitutos de carne procesados, que suelen ser más caros.\n`;
+  }
+  if(restricciones.includes('vegano')){
+    prompt += `- Importante: el menú debe ser 100% vegano, sin ningún producto de origen animal (sin carne, pescado, huevo, lácteos ni miel), sin excepciones.\n`;
+  } else if(restricciones.includes('vegetariano')){
+    prompt += `- Importante: el menú no debe incluir carne ni pescado bajo ninguna circunstancia (los lácteos y huevos sí están permitidos salvo que indique lo contrario).\n`;
+  }
+  prompt += `- Usa solo ingredientes fáciles de conseguir en Latinoamérica (evita productos como tahini, salsas asiáticas u otros ingredientes poco comunes en la región).\n`;
+  prompt += `\nPor favor entrégame:\n`;
+  prompt += `1. Un menú día por día con las comidas indicadas.\n`;
+  prompt += `2. Una lista de compras organizada por categoría (proteínas, vegetales, granos, otros).\n`;
+  prompt += `3. Sugerencias de meal prep: qué puedo preparar con anticipación y cómo conservarlo.\n`;
+  prompt += `4. Si algo no cuadra con mi presupuesto o tiempo disponible, avísame y ajusta la propuesta.`;
+
+  output.textContent = prompt;
+  output.classList.remove('empty');
+  ticketId.textContent = 'N.º ' + Math.floor(1000 + Math.random()*9000);
+  copyBtn.textContent = 'Copiar prompt';
+  copyBtn.classList.remove('copied');
+});
+
+copyBtn.addEventListener('click', function(){
+  const text = output.textContent;
+  if(!text || output.classList.contains('empty')) return;
+  navigator.clipboard.writeText(text).then(function(){
+    copyBtn.textContent = '✓ Copiado';
+    copyBtn.classList.add('copied');
+    setTimeout(function(){
+      copyBtn.textContent = 'Copiar prompt';
+      copyBtn.classList.remove('copied');
+    }, 1800);
+  });
+});
+</script>
+</body>
+</html>
