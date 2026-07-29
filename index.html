@@ -346,6 +346,7 @@
         <div class="ticket-body empty" id="output">Completa el formulario y presiona "Generar mi prompt" para ver tu comanda aquí.</div>
         <div class="ticket-foot">
           <button id="copyBtn" type="button">Copiar prompt</button>
+          <button id="chatgptBtn" type="button">Abrir en ChatGPT</button>
         </div>
       </div>
       <div class="upsell">¿Quieres que la IA ya venga <strong>configurada y afinada</strong> para esto, sin armar nada? Conoce el Agente de Meal Prep.</div>
@@ -444,6 +445,26 @@ copyBtn.addEventListener('click', function(){
       copyBtn.classList.remove('copied');
     }, 1800);
   });
+});
+
+const chatgptBtn = document.getElementById('chatgptBtn');
+
+// En celular, si la app de ChatGPT está instalada, el sistema operativo puede
+// abrir la app en vez del navegador, y ahí el prompt no se pre-llena.
+// Por eso copiamos al portapapeles como respaldo antes de abrir el link:
+// si abre navegador, ya viene cargado; si abre la app, el usuario solo pega.
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+chatgptBtn.addEventListener('click', async function(){
+  const text = output.textContent;
+  if(!text || output.classList.contains('empty')) return;
+
+  if(isMobile){
+    try{ await navigator.clipboard.writeText(text); }catch(err){ /* seguimos igual */ }
+  }
+
+  const url = 'https://chatgpt.com/?q=' + encodeURIComponent(text);
+  window.open(url, '_blank');
 });
 </script>
 </body>
