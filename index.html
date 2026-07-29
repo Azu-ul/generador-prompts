@@ -15,6 +15,7 @@
 <meta name="twitter:description" content="Arma en segundos el prompt perfecto para planificar tu semana de comidas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/3fbaf313a1.js" crossorigin="anonymous"></script>
 <style>
   :root{
     --cream:#F6F1E4;
@@ -177,6 +178,41 @@
     outline-offset:1px;
   }
   textarea{resize:vertical;min-height:64px;}
+  .stepper{
+    display:flex;
+    align-items:center;
+    gap:0;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--cream);
+    overflow:hidden;
+    width:fit-content;
+  }
+  .stepper-btn{
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--paper);
+    border:none;
+    color:var(--charcoal);
+    font-size:14px;
+    cursor:pointer;
+    transition:background-color .15s ease, color .15s ease;
+  }
+  .stepper-btn:hover{background:var(--sage);color:#fff;}
+  .stepper-btn:focus-visible{outline:2px solid var(--sage-dark);outline-offset:-2px;}
+  .stepper-btn:active{background:var(--sage-dark);color:#fff;}
+  .stepper-value{
+    min-width:52px;
+    text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:16px;
+    font-weight:600;
+    color:var(--charcoal);
+    user-select:none;
+  }
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   .chips{
     display:flex;
@@ -428,30 +464,30 @@
         <fieldset>
           <legend>01 · Objetivos (elige uno o varios)</legend>
           <div class="chips" id="objetivos">
-            <div class="chip"><input type="checkbox" id="o0" value="comer variado y mejor organizado" checked><label for="o0">Comer variado y organizado</label></div>
-            <div class="chip"><input type="checkbox" id="o1" value="bajar de peso de forma saludable"><label for="o1">Bajar de peso</label></div>
-            <div class="chip"><input type="checkbox" id="o2" value="ganar masa muscular"><label for="o2">Ganar masa muscular</label></div>
-            <div class="chip"><input type="checkbox" id="o3" value="ahorrar dinero en el super"><label for="o3">Ahorrar dinero</label></div>
-            <div class="chip"><input type="checkbox" id="o4" value="ahorrar tiempo cocinando (meal prep)"><label for="o4">Ahorrar tiempo</label></div>
+            <div class="chip"><input type="checkbox" id="o0" value="comer variado y mejor organizado" checked><label for="o0"><i class="fa-solid fa-utensils"></i> Comer variado y organizado</label></div>
+            <div class="chip"><input type="checkbox" id="o1" value="bajar de peso de forma saludable"><label for="o1"><i class="fa-solid fa-weight-scale"></i> Bajar de peso</label></div>
+            <div class="chip"><input type="checkbox" id="o2" value="ganar masa muscular"><label for="o2"><i class="fa-solid fa-dumbbell"></i> Ganar masa muscular</label></div>
+            <div class="chip"><input type="checkbox" id="o3" value="ahorrar dinero en el super"><label for="o3"><i class="fa-solid fa-sack-dollar"></i> Ahorrar dinero</label></div>
+            <div class="chip"><input type="checkbox" id="o4" value="ahorrar tiempo cocinando (meal prep)"><label for="o4"><i class="fa-solid fa-clock"></i> Ahorrar tiempo</label></div>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>02 · Restricciones alimentarias</legend>
           <div class="chips" id="restricciones">
-            <div class="chip"><input type="checkbox" id="r0" value="ninguna" checked><label for="r0">Ninguna</label></div>
-            <div class="chip"><input type="checkbox" id="r1" value="vegetariano"><label for="r1">Vegetariano</label></div>
-            <div class="chip"><input type="checkbox" id="r2" value="vegano"><label for="r2">Vegano</label></div>
-            <div class="chip"><input type="checkbox" id="r3" value="sin gluten"><label for="r3">Sin gluten</label></div>
-            <div class="chip"><input type="checkbox" id="r4" value="sin lactosa"><label for="r4">Sin lactosa</label></div>
-            <div class="chip"><input type="checkbox" id="r5" value="bajo en carbohidratos"><label for="r5">Bajo en carbos</label></div>
+            <div class="chip"><input type="checkbox" id="r0" value="ninguna" checked><label for="r0"><i class="fa-solid fa-check"></i> Ninguna</label></div>
+            <div class="chip"><input type="checkbox" id="r1" value="vegetariano"><label for="r1"><i class="fa-solid fa-carrot"></i> Vegetariano</label></div>
+            <div class="chip"><input type="checkbox" id="r2" value="vegano"><label for="r2"><i class="fa-solid fa-seedling"></i> Vegano</label></div>
+            <div class="chip"><input type="checkbox" id="r3" value="sin gluten"><label for="r3"><i class="fa-solid fa-wheat-awn-circle-exclamation"></i> Sin gluten</label></div>
+            <div class="chip"><input type="checkbox" id="r4" value="sin lactosa"><label for="r4"><i class="fa-solid fa-ban"></i> Sin lactosa</label></div>
+            <div class="chip"><input type="checkbox" id="r5" value="bajo en carbohidratos"><label for="r5"><i class="fa-solid fa-bowl-rice"></i> Bajo en carbos</label></div>
           </div>
         </fieldset>
 
         <fieldset>
           <div class="row2">
             <div>
-              <legend>03 · Días a planificar</legend>
+              <legend><i class="fa-solid fa-calendar-days"></i> 03 · Días a planificar</legend>
               <select id="dias">
                 <option value="3">3 días</option>
                 <option value="5">5 días</option>
@@ -459,8 +495,13 @@
               </select>
             </div>
             <div>
-              <legend>04 · Personas</legend>
-              <input type="number" id="personas" min="1" value="1">
+              <legend><i class="fa-solid fa-users"></i> 04 · Personas</legend>
+              <div class="stepper" id="personasStepper">
+                <button type="button" class="stepper-btn" id="personasMinus" aria-label="Restar persona"><i class="fa-solid fa-minus"></i></button>
+                <span class="stepper-value" id="personasValue">1</span>
+                <button type="button" class="stepper-btn" id="personasPlus" aria-label="Sumar persona"><i class="fa-solid fa-plus"></i></button>
+                <input type="hidden" id="personas" value="1">
+              </div>
             </div>
           </div>
         </fieldset>
@@ -468,11 +509,11 @@
         <fieldset>
           <legend>05 · Comidas a incluir</legend>
           <div class="chips" id="comidas">
-            <div class="chip"><input type="checkbox" id="c0" value="desayuno" checked><label for="c0">Desayuno</label></div>
-            <div class="chip"><input type="checkbox" id="c1" value="almuerzo" checked><label for="c1">Almuerzo</label></div>
-            <div class="chip"><input type="checkbox" id="c2" value="cena" checked><label for="c2">Cena</label></div>
-            <div class="chip"><input type="checkbox" id="c4" value="merienda" checked><label for="c4">Merienda</label></div>
-            <div class="chip"><input type="checkbox" id="c3" value="snacks/colaciones"><label for="c3">Snacks</label></div>
+            <div class="chip"><input type="checkbox" id="c0" value="desayuno" checked><label for="c0"><i class="fa-solid fa-egg"></i> Desayuno</label></div>
+            <div class="chip"><input type="checkbox" id="c1" value="almuerzo" checked><label for="c1"><i class="fa-solid fa-bowl-food"></i> Almuerzo</label></div>
+            <div class="chip"><input type="checkbox" id="c2" value="cena" checked><label for="c2"><i class="fa-solid fa-moon"></i> Cena</label></div>
+            <div class="chip"><input type="checkbox" id="c4" value="merienda" checked><label for="c4"><i class="fa-solid fa-mug-saucer"></i> Merienda</label></div>
+            <div class="chip"><input type="checkbox" id="c3" value="snacks/colaciones"><label for="c3"><i class="fa-solid fa-cookie"></i> Snacks</label></div>
           </div>
         </fieldset>
 
@@ -484,7 +525,7 @@
             <fieldset>
               <div class="row2">
                 <div>
-                  <legend>06 · Presupuesto</legend>
+                  <legend><i class="fa-solid fa-sack-dollar"></i> 06 · Presupuesto</legend>
                   <select id="presupuesto">
                     <option value="ajustado">Ajustado</option>
                     <option value="medio" selected>Medio</option>
@@ -492,7 +533,7 @@
                   </select>
                 </div>
                 <div>
-                  <legend>07 · Tiempo para cocinar</legend>
+                  <legend><i class="fa-regular fa-clock"></i> 07 · Tiempo para cocinar</legend>
                   <select id="tiempo">
                     <option value="poco (recetas rápidas, máx 20 min)">Poco (máx. 20 min)</option>
                     <option value="moderado (hasta 40 min)" selected>Moderado (hasta 40 min)</option>
@@ -505,18 +546,18 @@
             <fieldset>
               <legend>08 · Ingredientes que ya tienes (opcional)</legend>
               <div class="chips" id="ingredientesChips">
-                <div class="chip"><input type="checkbox" id="i0" value="arroz"><label for="i0">Arroz</label></div>
-                <div class="chip"><input type="checkbox" id="i1" value="pollo"><label for="i1">Pollo</label></div>
-                <div class="chip"><input type="checkbox" id="i2" value="huevos"><label for="i2">Huevos</label></div>
-                <div class="chip"><input type="checkbox" id="i3" value="papa"><label for="i3">Papa</label></div>
-                <div class="chip"><input type="checkbox" id="i4" value="tomate"><label for="i4">Tomate</label></div>
-                <div class="chip"><input type="checkbox" id="i5" value="cebolla"><label for="i5">Cebolla</label></div>
-                <div class="chip"><input type="checkbox" id="i6" value="atún"><label for="i6">Atún</label></div>
-                <div class="chip"><input type="checkbox" id="i7" value="lentejas"><label for="i7">Lentejas</label></div>
-                <div class="chip"><input type="checkbox" id="i8" value="fideos"><label for="i8">Fideos</label></div>
-                <div class="chip"><input type="checkbox" id="i9" value="queso"><label for="i9">Queso</label></div>
-                <div class="chip"><input type="checkbox" id="i10" value="pan"><label for="i10">Pan</label></div>
-                <div class="chip"><input type="checkbox" id="i11" value="verduras congeladas"><label for="i11">Verduras congeladas</label></div>
+                <div class="chip"><input type="checkbox" id="i0" value="arroz"><label for="i0"><i class="fa-solid fa-bowl-rice"></i> Arroz</label></div>
+                <div class="chip"><input type="checkbox" id="i1" value="pollo"><label for="i1"><i class="fa-solid fa-drumstick-bite"></i> Pollo</label></div>
+                <div class="chip"><input type="checkbox" id="i2" value="huevos"><label for="i2"><i class="fa-solid fa-egg"></i> Huevos</label></div>
+                <div class="chip"><input type="checkbox" id="i3" value="papa"><label for="i3"><i class="fa-solid fa-seedling"></i> Papa</label></div>
+                <div class="chip"><input type="checkbox" id="i4" value="tomate"><label for="i4"><i class="fa-solid fa-apple-whole"></i> Tomate</label></div>
+                <div class="chip"><input type="checkbox" id="i5" value="cebolla"><label for="i5"><i class="fa-solid fa-leaf"></i> Cebolla</label></div>
+                <div class="chip"><input type="checkbox" id="i6" value="atún"><label for="i6"><i class="fa-solid fa-fish"></i> Atún</label></div>
+                <div class="chip"><input type="checkbox" id="i7" value="lentejas"><label for="i7"><i class="fa-solid fa-circle-dot"></i> Lentejas</label></div>
+                <div class="chip"><input type="checkbox" id="i8" value="fideos"><label for="i8"><i class="fa-solid fa-bacon"></i> Fideos</label></div>
+                <div class="chip"><input type="checkbox" id="i9" value="queso"><label for="i9"><i class="fa-solid fa-cheese"></i> Queso</label></div>
+                <div class="chip"><input type="checkbox" id="i10" value="pan"><label for="i10"><i class="fa-solid fa-bread-slice"></i> Pan</label></div>
+                <div class="chip"><input type="checkbox" id="i11" value="verduras congeladas"><label for="i11"><i class="fa-solid fa-snowflake"></i> Verduras congeladas</label></div>
               </div>
               <textarea id="ingredientes" placeholder="Otros ingredientes que no están arriba..." style="margin-top:10px;"></textarea>
             </fieldset>
@@ -554,15 +595,15 @@
             <fieldset>
               <legend>13 · Equipamiento de cocina disponible</legend>
               <div class="chips" id="equipamiento">
-                <div class="chip"><input type="checkbox" id="e8" value="heladera" checked><label for="e8">Heladera</label></div>
-                <div class="chip"><input type="checkbox" id="e5" value="cocina/hornalla (para hervir o saltear)" checked><label for="e5">Cocina/hornalla</label></div>
-                <div class="chip"><input type="checkbox" id="e0" value="horno" checked><label for="e0">Horno</label></div>
-                <div class="chip"><input type="checkbox" id="e1" value="microondas" checked><label for="e1">Microondas</label></div>
-                <div class="chip"><input type="checkbox" id="e2" value="freezer" checked><label for="e2">Freezer</label></div>
-                <div class="chip"><input type="checkbox" id="e3" value="airfryer"><label for="e3">Airfryer</label></div>
-                <div class="chip"><input type="checkbox" id="e4" value="olla de presión"><label for="e4">Olla a presión</label></div>
-                <div class="chip"><input type="checkbox" id="e6" value="licuadora"><label for="e6">Licuadora</label></div>
-                <div class="chip"><input type="checkbox" id="e7" value="sandwichera/tostadora"><label for="e7">Sandwichera</label></div>
+                <div class="chip"><input type="checkbox" id="e8" value="heladera" checked><label for="e8"><i class="fa-solid fa-snowflake"></i> Heladera</label></div>
+                <div class="chip"><input type="checkbox" id="e5" value="cocina/hornalla (para hervir o saltear)" checked><label for="e5"><i class="fa-solid fa-fire-burner"></i> Cocina/hornalla</label></div>
+                <div class="chip"><input type="checkbox" id="e0" value="horno" checked><label for="e0"><i class="fa-solid fa-fire"></i> Horno</label></div>
+                <div class="chip"><input type="checkbox" id="e1" value="microondas" checked><label for="e1"><i class="fa-solid fa-bolt"></i> Microondas</label></div>
+                <div class="chip"><input type="checkbox" id="e2" value="freezer" checked><label for="e2"><i class="fa-solid fa-icicles"></i> Freezer</label></div>
+                <div class="chip"><input type="checkbox" id="e3" value="airfryer"><label for="e3"><i class="fa-solid fa-wind"></i> Airfryer</label></div>
+                <div class="chip"><input type="checkbox" id="e4" value="olla de presión"><label for="e4"><i class="fa-solid fa-gauge-high"></i> Olla a presión</label></div>
+                <div class="chip"><input type="checkbox" id="e6" value="licuadora"><label for="e6"><i class="fa-solid fa-blender"></i> Licuadora</label></div>
+                <div class="chip"><input type="checkbox" id="e7" value="sandwichera/tostadora"><label for="e7"><i class="fa-solid fa-bread-slice"></i> Sandwichera</label></div>
               </div>
             </fieldset>
 
@@ -614,6 +655,25 @@ function setChecked(containerId, values){
     el.checked = values.includes(el.value);
   });
 }
+
+/* ---------- STEPPER DE PERSONAS ---------- */
+const personasInput = document.getElementById('personas');
+const personasValueEl = document.getElementById('personasValue');
+const PERSONAS_MIN = 1;
+const PERSONAS_MAX = 12;
+
+function setPersonas(n){
+  n = Math.max(PERSONAS_MIN, Math.min(PERSONAS_MAX, n));
+  personasInput.value = n;
+  personasValueEl.textContent = n;
+}
+
+document.getElementById('personasMinus').addEventListener('click', function(){
+  setPersonas(parseInt(personasInput.value, 10) - 1);
+});
+document.getElementById('personasPlus').addEventListener('click', function(){
+  setPersonas(parseInt(personasInput.value, 10) + 1);
+});
 
 // "Ninguna" es excluyente con el resto de las restricciones
 const ningunaBox = document.getElementById('r0');
@@ -682,7 +742,7 @@ document.querySelectorAll('.preset-card').forEach(function(card){
     setChecked('objetivos', p.objetivos);
     setChecked('restricciones', p.restricciones);
     document.getElementById('dias').value = p.dias;
-    document.getElementById('personas').value = p.personas;
+    setPersonas(parseInt(p.personas, 10));
     setChecked('comidas', p.comidas);
     document.getElementById('presupuesto').value = p.presupuesto;
     document.getElementById('tiempo').value = p.tiempo;
