@@ -173,6 +173,19 @@
     background:var(--cream);
     color:var(--charcoal);
   }
+  select{
+    padding-right:34px;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232B2820' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 10px center;
+    background-size:16px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+  }
   select:focus-visible, textarea:focus-visible, input:focus-visible{
     outline:2px solid var(--sage);
     outline-offset:1px;
@@ -214,6 +227,8 @@
     user-select:none;
   }
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row2 legend{min-height:38px;display:flex;align-items:flex-start;gap:6px;}
+  .row2 legend i{margin-top:3px;}
   .chips{
     display:flex;
     flex-wrap:wrap;
