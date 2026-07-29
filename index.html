@@ -76,11 +76,12 @@
     margin:0 0 26px;
   }
   legend{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--sage-dark);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0;
+    text-transform:none;
+    color:var(--charcoal);
     margin-bottom:10px;
     padding:0;
   }
@@ -329,6 +330,45 @@
           <textarea id="alergias" placeholder="Ej: maní, mariscos, picante..."></textarea>
         </fieldset>
 
+        <fieldset>
+          <legend>10 · No te gusta (pero no es alergia, opcional)</legend>
+          <textarea id="disgustos" placeholder="Ej: berenjena, cilantro, hígado..."></textarea>
+        </fieldset>
+
+        <fieldset>
+          <div class="row2">
+            <div>
+              <legend>11 · Experiencia cocinando</legend>
+              <select id="experiencia">
+                <option value="principiante (recetas simples, pocos pasos)">Principiante</option>
+                <option value="intermedio" selected>Intermedio</option>
+                <option value="avanzado, me gusta experimentar">Avanzado</option>
+              </select>
+            </div>
+            <div>
+              <legend>12 · ¿Repetir comidas está bien?</legend>
+              <select id="repeticion">
+                <option value="sí, no me molesta comer lo mismo varias veces">Sí, no molesta</option>
+                <option value="prefiero variedad todos los días" selected>Prefiero variedad</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>13 · Equipamiento de cocina disponible</legend>
+          <div class="chips" id="equipamiento">
+            <div class="chip"><input type="checkbox" id="e5" value="cocina/hornalla (para hervir o saltear)" checked><label for="e5">Cocina/hornalla</label></div>
+            <div class="chip"><input type="checkbox" id="e0" value="horno" checked><label for="e0">Horno</label></div>
+            <div class="chip"><input type="checkbox" id="e1" value="microondas" checked><label for="e1">Microondas</label></div>
+            <div class="chip"><input type="checkbox" id="e2" value="freezer" checked><label for="e2">Freezer</label></div>
+            <div class="chip"><input type="checkbox" id="e3" value="airfryer"><label for="e3">Airfryer</label></div>
+            <div class="chip"><input type="checkbox" id="e4" value="olla de presión"><label for="e4">Olla a presión</label></div>
+            <div class="chip"><input type="checkbox" id="e6" value="licuadora"><label for="e6">Licuadora</label></div>
+            <div class="chip"><input type="checkbox" id="e7" value="sandwichera/tostadora"><label for="e7">Sandwichera</label></div>
+          </div>
+        </fieldset>
+
         <button type="submit" class="generate">Generar mi prompt →</button>
       </form>
     </div>
@@ -398,6 +438,10 @@ form.addEventListener('submit', function(e){
   const tiempo = document.getElementById('tiempo').value;
   const ingredientes = document.getElementById('ingredientes').value.trim();
   const alergias = document.getElementById('alergias').value.trim();
+  const disgustos = document.getElementById('disgustos').value.trim();
+  const experiencia = document.getElementById('experiencia').value;
+  const repeticion = document.getElementById('repeticion').value;
+  let equipamiento = getChecked('equipamiento');
 
   let prompt = `Actúa como un nutricionista y experto en meal prep. Ayúdame a planificar mi alimentación de la próxima semana con estas condiciones:\n\n`;
   prompt += `- Objetivos: ${objetivos.join(', ')}\n`;
@@ -409,6 +453,14 @@ form.addEventListener('submit', function(e){
   prompt += `- Tiempo disponible para cocinar: ${tiempo}\n`;
   if(ingredientes){ prompt += `- Ingredientes que ya tengo y quiero aprovechar: ${ingredientes}\n`; }
   if(alergias){ prompt += `- Alergias o ingredientes a evitar totalmente: ${alergias}\n`; }
+  if(disgustos){ prompt += `- No me gustan estos alimentos (evítalos aunque no sea alergia): ${disgustos}\n`; }
+  prompt += `- Mi experiencia cocinando: ${experiencia}\n`;
+  prompt += `- Sobre repetir comidas: ${repeticion}\n`;
+  if(equipamiento.length > 0){
+    prompt += `- Equipamiento de cocina disponible (usa EXCLUSIVAMENTE estos, no asumas que tengo ningún otro método de cocción ni electrodoméstico que no esté en esta lista): ${equipamiento.join(', ')}\n`;
+  } else {
+    prompt += `- No especifiqué equipamiento, así que usa solo lo más básico posible (fuego/cocina).\n`;
+  }
   const esVeggie = restricciones.includes('vegano') || restricciones.includes('vegetariano');
   if(presupuesto === 'ajustado' && !esVeggie){
     prompt += `- Regla de presupuesto: usa como máximo un solo tipo de carne roja/blanca en toda la semana (elige vaca, cerdo o pollo, no combines varias), y aprovecha el pescado como proteína económica siempre que sea posible.\n`;
